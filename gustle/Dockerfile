@@ -8,6 +8,11 @@ FROM ubuntu:focal as builder
 ARG GUSTLE_VER
 ARG GO_VERSION
 
+<<<<<<< HEAD
+ENV DEBIAN_FRONTEND noninteractive
+
+=======
+>>>>>>> origin/main
 LABEL base.image="ubuntu:focal"
 LABEL software="gustle"
 LABEL software.version=${GUSTLE_VER}
@@ -19,9 +24,22 @@ LABEL license.url="https://github.com/supernifty/gustle/blob/master/LICENSE"
 RUN apt-get update -y && apt-get install -y \
     curl \
     wget \
+<<<<<<< HEAD
+    zlib1g-dev \
+    python3 \
+    ca-certificates \
+    build-essential \
+    libssl-dev \
+    uuid-dev \
+    libgpgme11-dev \
+    squashfs-tools \
+    libseccomp-dev \
+    pkg-config
+=======
     build-essential \
     zlib1g-dev \
     python3
+>>>>>>> origin/main
 
 # Install Go 
 # from https://github.com/shenwei356/seqkit/blob/master/Dockerfile
