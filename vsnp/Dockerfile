@@ -10,7 +10,7 @@ ARG PYTHON_VER
 LABEL base.image="ubuntu:focal"
 LABEL software="vSNP3"
 LABEL software.version=${VSNP_VER}
-LABEL description="Dockerfile for vSNP3: validate SNPs"
+LABEL description="Generate annotated SNP tables and phylogenetic trees."
 LABEL website="https://github.com/USDA-VS/vsnp3"
 LABEL license.url="https://github.com/USDA-VS/vsnp3/blob/main/LICENSE"
 
