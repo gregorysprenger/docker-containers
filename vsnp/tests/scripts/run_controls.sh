@@ -13,9 +13,9 @@ vsnp3_path_adder.py -d `pwd`
 # Run Step 1
 cd ../AF2122_test_files/step1
 vsnp3_step1.py -r1 *_R1*.fastq.gz -r2 *_R2*.fastq.gz -t Mycobacterium_AF2122
-sha256sum alignment_NC_002945v4/*_zc.vcf > ../../step1.checksum
+sha256sum alignment_NC_002945v4/*_zc.vcf > ../../../step1.checksum
 
 # Run Step 2
 cd ../step2
 vsnp3_step2.py -wd . -a -t Mycobacterium_AF2122
-sha256sum Mbovis-All/*.fasta > ../../step2.checksum
+sha256sum Mbovis-All/*.fasta > ../../../step2.checksum

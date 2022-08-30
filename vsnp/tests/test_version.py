@@ -9,7 +9,7 @@ class TestVersion(unittest.TestCase):
             command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         out, err = process.communicate()
-        self.assertEqual(out, b"vsnp3_step1.py: version 3.0\n")
+        self.assertEqual(out, b"vsnp3_step1.py: version 3.09\n")
 
 
 if __name__ == "__main__":
