@@ -14,7 +14,7 @@ class TestControls(unittest.TestCase):
             step1_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
             step1_checksum,
-            "a42a215dca14b3efdc49e9a66495402fd1f637fe4abf182c86cba268b149c262",
+            "2b8df3595ebf349e8a9eda992e6fe2ac0ec1a809ace35684ef8c004a8eecab3c",
         )
 
     def test_vsnp_step2(self):
