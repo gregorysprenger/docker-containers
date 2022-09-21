@@ -17,14 +17,16 @@ LABEL license.url="https://github.com/USDA-VS/vsnp3/blob/main/LICENSE"
 ENV DEBIAN_FRONTEND=noninteractive 
 
 # Update and install packages
-RUN apt-get update -y && apt-get install -y wget
+RUN apt-get update -y && apt-get install -y \
+    wget \
+    libattr1-dev
 
 # Install miniconda
 RUN wget \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3 \
+    && /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/miniconda3 \
     && rm -f Miniconda3-latest-Linux-x86_64.sh
-ENV PATH="/opt/miniconda3/bin:${PATH}"
+ENV PATH="/usr/local/miniconda3/bin:${PATH}"
 
 # Install bioconda
 RUN conda config --add channels defaults \
@@ -33,7 +35,7 @@ RUN conda config --add channels defaults \
 
 # Install vsnp in conda environment
 RUN conda create -n vsnp vsnp3=$VSNP_VER
-ENV PATH="/opt/miniconda3/envs/vsnp/bin:${PATH}"
+ENV PATH="/usr/local/miniconda3/envs/vsnp/bin:${PATH}"
 
 FROM ubuntu:focal as app
 ARG VSNP_VER
@@ -41,13 +43,13 @@ ARG VSNP_VER
 ENV DEBIAN_FRONTEND=noninteractive 
 
 # Copy packages from builder to production image
-COPY --from=builder /opt/miniconda3 /opt/miniconda3
+COPY --from=builder /usr/local/miniconda3 /usr/local/miniconda3
 COPY --from=builder /usr/local/ /usr/local/
 COPY --from=builder /usr/ /usr/
 
 # Copy path environments from builder to production image
-ENV PATH="/opt/miniconda3/bin:${PATH}"
-ENV PATH="/opt/miniconda3/envs/vsnp/bin:${PATH}"
+ENV PATH="/usr/local/miniconda3/bin:${PATH}"
+ENV PATH="/usr/local/miniconda3/envs/vsnp/bin:${PATH}"
 
 RUN mkdir data/
 WORKDIR /data
