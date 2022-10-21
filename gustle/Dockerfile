@@ -82,9 +82,13 @@ FROM app as test
 
 RUN apt-get update && apt-get install -y \
     python3 \
+    python3-pip \
     wget \
     curl
 
+RUN pip install pytest
+
 RUN mkdir ../tests/
 COPY tests/ ../tests/
-RUN python3 -m unittest discover -v -s ../tests
+# RUN python3 -m unittest discover -v -s ../tests
+RUN python3 -m pytest ../tests
