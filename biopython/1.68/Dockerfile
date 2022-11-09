@@ -73,4 +73,4 @@ RUN apt-get update && apt-get install -y \
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
-RUN python3 -m unittest discover -v -s ../tests
+RUN python -m unittest discover -v -s ../tests
