@@ -1,5 +1,5 @@
 # Set global variables
-ARG BIOPYTHON_VER="1.6.8"
+ARG BIOPYTHON_VER="1.68"
 
 # Build Dockerfile
 FROM ubuntu:focal as builder
