@@ -1,6 +1,7 @@
 import unittest
 import platform
 import Bio
+import numpy
 
 class TestVersions(unittest.TestCase):
     def test_python(self):
@@ -10,6 +11,10 @@ class TestVersions(unittest.TestCase):
     def test_biopython(self):
         biopython_version = Bio.__version__
         self.assertEqual(biopython_version, "1.68")
+
+    def test_numpy(self):
+        numpy_version = numpy.__version__
+        self.assertEqual(numpy_version, "1.16.6")
 
 if __name__ == "__main__":
     unittest.main()
