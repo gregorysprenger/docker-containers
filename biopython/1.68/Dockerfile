@@ -67,9 +67,7 @@ WORKDIR /data
 
 FROM app as test
 
-RUN apt-get update && apt-get install -y \
-    python \
-    wget
+RUN apt-get update
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
