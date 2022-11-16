@@ -50,17 +50,19 @@ RUN BIOPYTHON_SHORT_VER=$(echo ${BIOPYTHON_VER} | sed 's/\.//g') && \
     wget https://github.com/biopython/biopython/archive/refs/tags/biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
     -O biopython-${BIOPYTHON_SHORT_VER}.tar.gz && \
     tar -zxvf biopython-${BIOPYTHON_SHORT_VER}.tar.gz && \
-    mv biopython-biopython-${BIOPYTHON_SHORT_VER} biopython-${BIOPYTHON_SHORT_VER} && \
-    cd biopython-${BIOPYTHON_SHORT_VER} && \
+    mv biopython-biopython-${BIOPYTHON_SHORT_VER} biopython-${BIOPYTHON_VER} && \
+    cd biopython-${BIOPYTHON_VER} && \
     pip install -e . && \
     python setup.py test && \
     python setup.py install 
 
 # Run Dockerfile
 FROM ubuntu:focal as app
+ARG BIOPYTHON_VER
 
 COPY --from=builder /usr/local/ /usr/local/
 COPY --from=builder /usr/ /usr/
+COPY --from=builder /biopython-${BIOPYTHON_VER}/ /biopython-${BIOPYTHON_VER}/
 
 RUN mkdir data/
 WORKDIR /data
