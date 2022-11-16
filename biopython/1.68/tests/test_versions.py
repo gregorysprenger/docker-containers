@@ -3,6 +3,7 @@ import platform
 import Bio
 import numpy
 
+
 class TestVersions(unittest.TestCase):
     def test_python(self):
         python_version = platform.python_version()
@@ -15,6 +16,7 @@ class TestVersions(unittest.TestCase):
     def test_numpy(self):
         numpy_version = numpy.__version__
         self.assertEqual(numpy_version, "1.16.6")
+
 
 if __name__ == "__main__":
     unittest.main()
