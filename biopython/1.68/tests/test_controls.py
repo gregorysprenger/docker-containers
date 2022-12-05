@@ -6,9 +6,9 @@ import subprocess
 class TestControls(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        run_positive_controls = "bash /tests/scripts/run_controls.sh"
+        run_controls = "bash /tests/scripts/run_controls.sh"
         process = subprocess.Popen(
-            run_positive_controls,
+            run_controls,
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
