@@ -49,6 +49,7 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tg
 
 RUN mkdir -p /db && cd /db && \
     update_blastdb.pl 16S_ribosomal_RNA
+    
 # Run Dockerfile
 FROM ubuntu:focal as app
 
