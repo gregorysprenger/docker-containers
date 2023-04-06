@@ -21,17 +21,17 @@ LABEL maintainer3="Gregory Sprenger"
 
 
 RUN apt-get update && apt-get install -y wget \
- libmoo-perl \
- liblist-moreutils-perl \
- libjson-perl \
- libgomp1 \
- gzip \
- file
+  libmoo-perl \
+  liblist-moreutils-perl \
+  libjson-perl \
+  libgomp1 \
+  gzip \
+  file
 
 # get BLAST+ precompiled binaries
 RUN wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz && \
- tar -xzf ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz && \
- rm ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz
+  tar -xzf ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz && \
+  rm ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz
 
 # get any2fasta perl script
 RUN cd /usr/local/bin && \
@@ -40,13 +40,13 @@ RUN cd /usr/local/bin && \
 
 # get mlst
 RUN wget https://github.com/tseemann/mlst/archive/v${MLST_VER}.tar.gz &&\
- tar -xzf v${MLST_VER}.tar.gz &&\
- rm v${MLST_VER}.tar.gz
+  tar -xzf v${MLST_VER}.tar.gz &&\
+  rm v${MLST_VER}.tar.gz
 
 # set PATH and perl local settings
 ENV PATH="${PATH}:/mlst-${MLST_VER}/bin:\
-/ncbi-blast-${BLASTPLUS_VER}+/bin" \
-    LC_ALL=C
+  /ncbi-blast-${BLASTPLUS_VER}+/bin" \
+  LC_ALL=C
 
 # check dependencies and list available schemes
 RUN mlst --check && mlst --list
@@ -65,8 +65,8 @@ COPY --from=builder /ncbi-blast-${BLASTPLUS_VER}+/ /ncbi-blast-${BLASTPLUS_VER}+
 
 # set PATH and perl local settings
 ENV PATH="${PATH}:/mlst-${MLST_VER}/bin:\
-/ncbi-blast-${BLASTPLUS_VER}+/bin" \
-    LC_ALL=C
+  /ncbi-blast-${BLASTPLUS_VER}+/bin" \
+  LC_ALL=C
 
 RUN mkdir data/
 WORKDIR /data
