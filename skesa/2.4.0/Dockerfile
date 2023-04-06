@@ -7,7 +7,7 @@ FROM ubuntu:focal as builder
 ARG SKESA_VER
 ARG BOOST_VER
 
-LABEL base.image="ubuntu:jammy"
+LABEL base.image="ubuntu:focal"
 LABEL dockerfile.version="1.0.0"
 LABEL software="SKESA"
 LABEL software.version=${SKESA_VER}
