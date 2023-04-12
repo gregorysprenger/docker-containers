@@ -20,16 +20,16 @@ LABEL maintainer="Gregory Sprenger"
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
+    build-essential \
+    autotools-dev \
+    python3-dev \
+    libbz2-dev \
+    libicu-dev \
+    cmake \
     wget \
     curl \
-    cmake \
-    git \
     pigz \
-    libicu-dev \
-    libbz2-dev \
-    python3-dev \
-    autotools-dev \
-    build-essential
+    git
 
 # Install BOOST
 RUN BOOST_REFORMAT_VER=$(echo ${BOOST_VER} | sed 's/\./_/g') && \

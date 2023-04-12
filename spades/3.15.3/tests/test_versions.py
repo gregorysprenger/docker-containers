@@ -19,5 +19,6 @@ class TestVersion(unittest.TestCase):
         out, err = process.communicate()
         self.assertEqual(out, "2.7.18\n")
 
+
 if __name__ == "__main__":
     unittest.main()

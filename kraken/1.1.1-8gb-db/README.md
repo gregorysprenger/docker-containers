@@ -2,6 +2,7 @@
 
 This image implements:
 - [Kraken v1.1.1](https://github.com/DerrickWood/kraken)
+- [MiniKraken 8GB from 2017-10-19](http://ccb.jhu.edu/software/kraken/)
 - [Jellyfish v1.1.12](https://github.com/gmarcais/Jellyfish/) (dependency for Kraken)
 
 and can be accessed at [docker hub](https://hub.docker.com/u/gregorysprenger).
@@ -15,12 +16,8 @@ mkdir -p data
 cd data
 
 # Download test data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
-
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
-
+wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
+wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 ```
 
 Run Kraken:

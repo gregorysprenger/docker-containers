@@ -5,11 +5,9 @@ mkdir -p data
 cd data
 
 # Download test data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
+wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
 
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
+wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 
 # Set database to minikraken database
 database="/kraken-database"
