@@ -65,7 +65,7 @@ ENV PATH="${PATH}:/usr/:/usr/kraken"
 RUN mkdir data/
 WORKDIR /data
 
-# Make sure skesa is working properly
+# Make sure Kraken is working properly
 FROM app as test
 
 RUN apt-get update && apt-get install -y wget python3
