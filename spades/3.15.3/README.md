@@ -15,8 +15,11 @@ mkdir -p data
 cd data
 
 # Download test data
-wget -nv https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R1.fastq.gz
-wget -nv https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R2.fastq.gz
+wget -nv --no-check-certificate \
+  https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R1.fastq.gz
+  
+wget -nv --no-check-certificate \
+  https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R2.fastq.gz
 ```
 
 Run SPAdes:

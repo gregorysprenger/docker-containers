@@ -22,12 +22,12 @@ RUN apt-get update && \
     apt-get install -y \
     build-essential \
     ca-certificates \
+    zlib1g-dev \
+    libbz2-dev \
+    cmake \
     wget \
     curl \
-    pigz \
-    cmake \
-    zlib1g-dev \
-    libbz2-dev  
+    pigz
 
 # Install Python
 RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
@@ -40,7 +40,7 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tg
 RUN wget https://github.com/ablab/spades/archive/refs/tags/v${SPADES_VER}.tar.gz && \
     tar -xzvf v${SPADES_VER}.tar.gz && \
     cd spades-${SPADES_VER} && \
-    PREFIX=/usr/local/ ./assembler/spades_compile.sh 
+    PREFIX=/usr/local/ ./assembler/spades_compile.sh
 
 # Run Dockerfile
 FROM ubuntu:focal as app
