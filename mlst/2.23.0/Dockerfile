@@ -21,12 +21,14 @@ LABEL maintainer3="Gregory Sprenger"
 
 
 RUN apt-get update && apt-get install -y wget \
-  libmoo-perl \
   liblist-moreutils-perl \
+  ca-certificates \
   libjson-perl \
+  libmoo-perl \
   libgomp1 \
   gzip \
-  file
+  file \
+  pigz
 
 # get BLAST+ precompiled binaries
 RUN wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz && \

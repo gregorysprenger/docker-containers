@@ -7,7 +7,7 @@ sha256sum pos_py3.txt > pos_py3.txt.checksum
 
 ## BLAST+ - Check if output occurs
 export BLASTDB=/db/
-wget --no-check-certificate -nv https://raw.githubusercontent.com/nf-core/test-datasets/44bd1eb9292b34a78c41a423805c14b63f2da56c/data/delete_me/e_coli_k12_16s.fna
+wget -nv https://raw.githubusercontent.com/nf-core/test-datasets/44bd1eb9292b34a78c41a423805c14b63f2da56c/data/delete_me/e_coli_k12_16s.fna
 
 blastn \
     -task blastn \

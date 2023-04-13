@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Download test data
-wget https://github.com/nf-core/test-datasets/raw/6269b99f1bbd19fb0acc74e9763688bf089db814/test_data/test_minigut_R1.fastq.gz
+wget -nv https://github.com/nf-core/test-datasets/raw/6269b99f1bbd19fb0acc74e9763688bf089db814/test_data/test_minigut_R1.fastq.gz
 
 # Gunzip test data
 gunzip test_minigut_R1.fastq.gz

@@ -17,24 +17,24 @@ LABEL software="Blast+, Python2, Biopython"
 LABEL software.version="1.0.0"
 LABEL description="Combination of Blast+, Python 2.7, and Biopython 1.68"
 
-ENV DEBIAN_FRONTEND=noninteractive 
-
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    gcc \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
     build-essential \
     libreadline-gplv2-dev \
     libncursesw5-dev \
-    libssl-dev \
     libsqlite3-dev \
-    tk-dev \
-    libgdbm-dev \
-    libc6-dev \
-    libbz2-dev \
     libjson-perl \
-    perl 
+    libgdbm-dev \
+    libssl-dev \
+    libbz2-dev \
+    libc6-dev \
+    tk-dev \
+    wget \
+    curl \
+    perl \
+    pigz
 
 # Install Python 2.7
 RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
@@ -48,7 +48,7 @@ RUN wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python get-pip.py && \
     pip install numpy==${NUMPY_VER}
 
-# Install Biopython 1.6.8
+# Install Biopython 1.68
 RUN BIOPYTHON_SHORT_VER=$(echo ${BIOPYTHON_VER} | sed 's/\.//g') && \
     wget https://github.com/biopython/biopython/archive/refs/tags/biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
     -O biopython-${BIOPYTHON_SHORT_VER}.tar.gz && \

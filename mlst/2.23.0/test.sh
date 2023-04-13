@@ -14,8 +14,7 @@ else
 fi
 
 # Get data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/bactmap/genome/NCTC13799.fna
+wget -nv https://github.com/nf-core/test-datasets/raw/bactmap/genome/NCTC13799.fna
 
 # Run program to scan a genome assembly against PubMLST
 mlst NCTC13799.fna > mlst-results.tsv

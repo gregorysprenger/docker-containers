@@ -14,25 +14,27 @@ LABEL software.version=${BLASTPLUS_VER}
 LABEL description="BLAST+: A suite of command-line tools to run BLAST (Basic Local Alignment Search Tool)."
 LABEL website="https://www.ncbi.nlm.nih.gov/books/NBK279690/"
 LABEL license.url="https://www.ncbi.nlm.nih.gov/IEB/ToolBox/CPP_DOC/lxr/source/scripts/projects/blast/LICENSE"
-
-ENV DEBIAN_FRONTEND=noninteractive
+LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+    build-essential \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
     libjson-perl \
+    libgdbm-dev \
+    libssl-dev \
+    libbz2-dev \
+    libc6-dev \
+    tk-dev \
+    curl \
     perl \
     wget \
-    gcc \
-    build-essential \
-    libreadline-dev \
-    libncursesw5-dev \
-    libssl-dev \
-    libsqlite3-dev \
-    tk-dev \
-    libgdbm-dev \
-    libc6-dev \
-    libbz2-dev
+    curl \
+    pigz
 
 # Install BLAST+
 RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz \

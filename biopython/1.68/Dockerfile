@@ -17,21 +17,21 @@ LABEL description="Biopython is a set of freely available tools for biological c
 LABEL website="https://biopython.org/"
 LABEL license.url="https://github.com/biopython/biopython/blob/master/LICENSE.rst"
 
-ENV DEBIAN_FRONTEND=noninteractive 
-
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    gcc \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
     build-essential \
     libreadline-gplv2-dev \
     libncursesw5-dev \
-    libssl-dev \
     libsqlite3-dev \
-    tk-dev \
     libgdbm-dev \
+    libssl-dev \
     libc6-dev \
-    libbz2-dev
+    libbz2-dev \
+    wget \
+    curl \
+    pigz
 
 # Install Python 2.7
 RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
