@@ -33,7 +33,6 @@ RUN apt-get update && \
     curl \
     perl \
     wget \
-    curl \
     pigz
 
 # Install BLAST+
