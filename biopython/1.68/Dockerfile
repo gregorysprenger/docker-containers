@@ -16,6 +16,7 @@ LABEL software.version=${BIOPYTHON_VER}
 LABEL description="Biopython is a set of freely available tools for biological computation written in Python by an international team of developers."
 LABEL website="https://biopython.org/"
 LABEL license.url="https://github.com/biopython/biopython/blob/master/LICENSE.rst"
+LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
 RUN apt-get update && \

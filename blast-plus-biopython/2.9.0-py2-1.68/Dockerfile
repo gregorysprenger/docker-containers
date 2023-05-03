@@ -16,6 +16,7 @@ LABEL dockerfile.version="1.0.0"
 LABEL software="Blast+, Python2, Biopython"
 LABEL software.version="1.0.0"
 LABEL description="Combination of Blast+, Python 2.7, and Biopython 1.68"
+LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
 RUN apt-get update && \

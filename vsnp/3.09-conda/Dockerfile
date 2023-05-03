@@ -13,6 +13,7 @@ LABEL software.version=${VSNP_VER}
 LABEL description="Generate annotated SNP tables and phylogenetic trees."
 LABEL website="https://github.com/USDA-VS/vsnp3"
 LABEL license.url="https://github.com/USDA-VS/vsnp3/blob/main/LICENSE"
+LABEL maintainer="Gregory Sprenger"
 
 ENV DEBIAN_FRONTEND=noninteractive 
 

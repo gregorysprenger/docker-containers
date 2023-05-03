@@ -16,6 +16,7 @@ LABEL software.version=${GUSTLE_VER}
 LABEL description="Performs genome wide MLST gentoyping."
 LABEL website="https://github.com/supernifty/gustle"
 LABEL license.url="https://github.com/supernifty/gustle/blob/master/LICENSE"
+LABEL maintainer="Gregory Sprenger"
 
 # Update and install packages
 RUN apt-get update -y && apt-get install -y \

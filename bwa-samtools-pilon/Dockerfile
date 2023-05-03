@@ -12,6 +12,7 @@ LABEL base.image="ubuntu:focal"
 LABEL software="bwa-samtools-pilon"
 LABEL software.version="1.0.0"
 LABEL description="Dockerfile for bwa, samtools, and pilon"
+LABEL maintainer="Gregory Sprenger"
 
 ENV DEBIAN_FRONTEND=noninteractive 
 
