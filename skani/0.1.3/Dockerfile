@@ -10,7 +10,7 @@ ARG RUST_VER
 LABEL base.image="ubuntu:focal"
 LABEL dockerfile.version="0.1.3"
 LABEL software="skani"
-LABEL software.version=${PANDAS_VER}
+LABEL software.version=${SKANI_VER}
 LABEL description="Fast, robust ANI and aligned fraction for metagenomic genomes and contigs."
 LABEL website="https://github.com/bluenote-1577/skani"
 LABEL license.url="https://github.com/bluenote-1577/skani/blob/main/LICENSE"
