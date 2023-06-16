@@ -19,5 +19,5 @@ wget -nv --no-check-certificate \
   -O 2BA6PG.fna.gz
 
 # Run skani
-skani dist CP024957.fna.gz 2BA6PG.fna.gz -o pos_output.txt
+skani dist CP024957.fna.gz 2BA6PG.fna.gz -o output.txt
 ```
