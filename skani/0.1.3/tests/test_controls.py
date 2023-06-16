@@ -38,9 +38,9 @@ class TestControls(unittest.TestCase):
 
     def test_neg_output_checksum(self):
         with open("neg_output.txt.error.checksum") as f:
-            python2_output_checksum = f.readlines()[0].split(" ")[0]
+            neg_output_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
-            python2_output_checksum,
+            neg_output_checksum,
             "ac6b1b9906cc770f4429b27db73aa45489ddb1f9733e8cb749235919bc659cc3",
         )
 
