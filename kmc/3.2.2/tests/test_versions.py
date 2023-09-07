@@ -3,7 +3,7 @@ import subprocess
 
 
 class TestVersions(unittest.TestCase):
-    def test_fastANI(self):
+    def test_kmc(self):
         command = "kmc --help | head -n 1 | awk -F ' ' '{print $5}'"
         process = subprocess.Popen(
             command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
