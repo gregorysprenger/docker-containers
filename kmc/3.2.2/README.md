@@ -19,8 +19,8 @@ mkdir -p kmc-tmp-dir
 # Run KMC
 kmc \
     test_minigut_R1.fastq.gz \
-    pos_control \
+    kmc-output \
     kmc-tmp-dir \
-    1> pos_stdout.log \
-    2> pos_stderr.log
+    1> stdout.log \
+    2> stderr.log
 ```
