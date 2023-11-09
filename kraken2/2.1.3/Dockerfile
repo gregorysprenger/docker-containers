@@ -1,11 +1,9 @@
 # Set global variables
 ARG KRAKEN2_VER="2.1.3"
-ARG STANDARD_8GB_DB_VER="20230605"
 
 # Build Dockerfile
 FROM ubuntu:focal as builder
 ARG KRAKEN2_VER
-ARG STANDARD_8GB_DB_VER
 
 LABEL base.image="ubuntu:focal"
 LABEL dockerfile.version="2.1.3"
@@ -35,29 +33,24 @@ RUN wget https://github.com/DerrickWood/kraken2/archive/refs/tags/v${KRAKEN2_VER
     cd kraken2-${KRAKEN2_VER} && \
     ./install_kraken2.sh /usr/
 
-# Download Kraken2 8gb DB
-RUN wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_${STANDARD_8GB_DB_VER}.tar.gz && \
-    mkdir /kraken2-database && \
-    tar -xzvf k2_standard_08gb_${STANDARD_8GB_DB_VER}.tar.gz \
-    -C /kraken2-database && \
-    rm -rf k2_standard_08gb_${STANDARD_8GB_DB_VER}
-
 # Run Dockerfile
 FROM ubuntu:focal as app
 
 COPY --from=builder /usr/ /usr/
-COPY --from=builder /kraken2-database/ /kraken2-database/
+
+# Copy certificates for wget
+COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 ENV PATH="${PATH}:/usr/:/usr/kraken2"
 
 RUN mkdir data/
 WORKDIR /data
 
-# Make sure Kraken 2 is working properly
+# Verify tools are working properly
 FROM app as test
 
 RUN apt-get update && \
-    apt-get install -y wget python3
+    apt-get install -y python3
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/

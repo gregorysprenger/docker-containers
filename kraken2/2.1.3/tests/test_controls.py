@@ -30,11 +30,6 @@ class TestControls(unittest.TestCase):
             "kraken2: Must specify DB with either --db or $KRAKEN2_DEFAULT_DB",
         )
 
-    def test_minikraken_database(self):
-        self.assertEqual(os.path.isfile("/kraken2-database/hash.k2d"), True)
-        self.assertEqual(os.path.isfile("/kraken2-database/opts.k2d"), True)
-        self.assertEqual(os.path.isfile("/kraken2-database/taxo.k2d"), True)
-
 
 if __name__ == "__main__":
     unittest.main()
