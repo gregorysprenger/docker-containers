@@ -5,14 +5,14 @@ mkdir -p data
 cd data
 
 # Download test data
-wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
-
-wget -nv https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
+wget \
+  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz \
+  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 
 # Set database to minikraken database
 database="/kraken-database"
 
-# Make sure database exists
+# Check for database.{idx,kdb} files
 for ext in idx kdb; do
   if [ ! -f ${database}/database.${ext} ]; then
     echo "ERROR: pre-formatted kraken database (.${ext}) for read classification is missing" >&2
@@ -49,4 +49,3 @@ kraken \
   test_minigut_R1.fastq.gz test_minigut_R2.fastq.gz \
   > kraken_missing_fastq_input_param.output \
   2> kraken_missing_fastq_input_param.txt
-  

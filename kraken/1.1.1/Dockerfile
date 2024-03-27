@@ -8,60 +8,59 @@ ARG KRAKEN_VER
 ARG JELLYFISH_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL dockerfile.version=${KRAKEN_VER}
-LABEL software="Kraken"
-LABEL software.version=${KRAKEN_VER}
 LABEL description="Taxonomic sequence classifier"
-LABEL website="https://github.com/DerrickWood/kraken"
+LABEL dockerfile.version=${KRAKEN_VER}
 LABEL license="https://github.com/DerrickWood/kraken/blob/master/LICENSE"
+LABEL software.version=${KRAKEN_VER}
+LABEL software="Kraken"
+LABEL website="https://github.com/DerrickWood/kraken"
 LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
     build-essential \
     ca-certificates \
     cpanminus \
+    rsync \
     wget \
     curl \
-    rsync \
     pigz
 
 # Install Jellyfish
-RUN wget https://github.com/gmarcais/Jellyfish/releases/download/v${JELLYFISH_VER}/jellyfish-${JELLYFISH_VER}.tar.gz && \
-    tar -xzvf jellyfish-${JELLYFISH_VER}.tar.gz && \
-    cd jellyfish-${JELLYFISH_VER} && \
-    ./configure --prefix=/usr/ && \
-    NUM_CPUS=$(grep "processor" /proc/cpuinfo | wc -l) && \
-    make -j ${NUM_CPUS} && \
-    make install
+RUN wget https://github.com/gmarcais/Jellyfish/releases/download/v${JELLYFISH_VER}/jellyfish-${JELLYFISH_VER}.tar.gz \
+    && tar -xzf jellyfish-${JELLYFISH_VER}.tar.gz \
+    && rm jellyfish-${JELLYFISH_VER}.tar.gz \
+    && cd jellyfish-${JELLYFISH_VER} \
+    && ./configure --prefix=/usr/local/bin/ \
+    && make -j$(nproc) \
+    && make install
 
 # Install Kraken
-RUN wget https://github.com/DerrickWood/kraken/archive/refs/tags/v${KRAKEN_VER}.tar.gz && \
-    tar -xzvf v${KRAKEN_VER}.tar.gz && \
-    cd kraken-${KRAKEN_VER} && \
-    ./install_kraken.sh /usr/ && \
-    cpanm Getopt::Std
+RUN wget https://github.com/DerrickWood/kraken/archive/refs/tags/v${KRAKEN_VER}.tar.gz \
+    && tar -xzf v${KRAKEN_VER}.tar.gz \
+    && rm v${KRAKEN_VER}.tar.gz \
+    && cd kraken-${KRAKEN_VER} \
+    && ./install_kraken.sh /usr/local/bin/ \
+    && cpanm Getopt::Std
 
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/ /usr/
+COPY --from=builder /usr/local/ /usr/local/
 
 # Copy certificates for wget
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
-ENV PATH="${PATH}:/usr/:/usr/kraken"
-
 RUN mkdir data/
 WORKDIR /data
 
-# Verify tools are working properly
+# Run tests
 FROM app as test
 
-RUN apt-get update && \
-    apt-get install -y python3
+RUN apt-get update \
+    && apt-get install -y python3
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/

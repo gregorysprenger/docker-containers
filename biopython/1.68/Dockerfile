@@ -10,68 +10,75 @@ ARG BIOPYTHON_VER
 ARG NUMPY_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL dockerfile.version="1.0.0"
-LABEL software="Biopython"
-LABEL software.version=${BIOPYTHON_VER}
 LABEL description="Biopython is a set of freely available tools for biological computation written in Python by an international team of developers."
-LABEL website="https://biopython.org/"
+LABEL dockerfile.version="1.0.0"
 LABEL license.url="https://github.com/biopython/biopython/blob/master/LICENSE.rst"
+LABEL software.version=${BIOPYTHON_VER}
+LABEL software="Biopython"
+LABEL website="https://biopython.org/"
 LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
-    build-essential \
+RUN apt-get update \
+   && DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends -y \
     libreadline-gplv2-dev \
     libncursesw5-dev \
+    ca-certificates \
+    build-essential \
     libsqlite3-dev \
     libgdbm-dev \
+    zlib1g-dev \
+    libbz2-dev \
     libssl-dev \
     libc6-dev \
-    libbz2-dev \
-    wget \
+    pigz \
     curl \
-    pigz
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python 2.7
-RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
-    tar -zxvf Python-${PYTHON_VER}.tgz && \
-    cd Python-${PYTHON_VER} && \
-    ./configure && \
-    make && make install
+RUN wget -q https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz \
+    && tar -xzf Python-${PYTHON_VER}.tgz \
+    && rm Python-${PYTHON_VER}.tgz \
+    && cd Python-${PYTHON_VER} \
+    && ./configure \
+    && make \
+    && make install
 
-# Install pip for Python 2.7 and get numpy
-RUN wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
-    python get-pip.py && \
-    pip install numpy==${NUMPY_VER}
+# Install pip and numpy
+RUN wget -q https://bootstrap.pypa.io/pip/2.7/get-pip.py \
+    && python get-pip.py \
+    && pip install --no-cache-dir numpy==${NUMPY_VER}
 
-# Get Biopython 1.68
-RUN BIOPYTHON_SHORT_VER=$(echo ${BIOPYTHON_VER} | sed 's/\.//g') && \
-    wget https://github.com/biopython/biopython/archive/refs/tags/biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
-    -O biopython-${BIOPYTHON_SHORT_VER}.tar.gz && \
-    tar -zxvf biopython-${BIOPYTHON_SHORT_VER}.tar.gz && \
-    mv biopython-biopython-${BIOPYTHON_SHORT_VER} biopython-${BIOPYTHON_VER} && \
-    cd biopython-${BIOPYTHON_VER} && \
-    pip install -e . && \
-    python setup.py test && \
-    python setup.py install 
+# Install  Biopython
+RUN BIOPYTHON_SHORT_VER="$(echo ${BIOPYTHON_VER} | sed 's/\.//g')" \
+    && wget -q https://github.com/biopython/biopython/archive/refs/tags/biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
+    && tar -xzf biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
+    && rm biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
+    && cd biopython-biopython-${BIOPYTHON_SHORT_VER} \
+    && pip install --no-cache-dir -e . \
+    && python setup.py test \
+    && python setup.py install
 
 # Run Dockerfile
 FROM ubuntu:focal as app
-ARG BIOPYTHON_VER
 
 COPY --from=builder /usr/local/ /usr/local/
-COPY --from=builder /usr/ /usr/
-COPY --from=builder /biopython-${BIOPYTHON_VER}/ /biopython-${BIOPYTHON_VER}/
+
+RUN update-ca-certificates
 
 RUN mkdir data/
 WORKDIR /data
 
+# Run tests
 FROM app as test
 
-RUN apt-get update
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
-RUN python -m unittest discover -v -s ../tests
+RUN python3 -m unittest discover -v -s ../tests

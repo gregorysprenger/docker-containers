@@ -5,16 +5,14 @@ mkdir -p data
 cd data
 
 # Download test data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
-  
-wget -nv --no-check-certificate \
+wget \
+  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz \
   https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 
 # Set database to minikraken database
 database="/kraken2-database"
 
-# Make sure database exists
+# Check for {hash,opts,taxo}.k2d files
 for prefix in hash opts taxo; do
   if [ ! -f ${database}/${prefix}.k2d ]; then
     echo "ERROR: pre-formatted kraken2 database (${prefix}.k2d) for read classification is missing" >&2
@@ -33,7 +31,8 @@ kraken2 \
   --output /dev/null \
   --use-names \
   --report kraken2.tab \
-  test_minigut_R1.fastq.gz test_minigut_R2.fastq.gz
+  test_minigut_R1.fastq.gz \
+  test_minigut_R2.fastq.gz
 
 # Get checksum
 sha256sum kraken2.tab > kraken2.tab.checksum
@@ -45,5 +44,6 @@ kraken2 \
   --output /dev/null \
   --use-names \
   --report kraken_no_database.tab \
-  test_minigut_R1.fastq.gz test_minigut_R2.fastq.gz \
+  test_minigut_R1.fastq.gz \
+  test_minigut_R2.fastq.gz \
   2> missing_database.txt

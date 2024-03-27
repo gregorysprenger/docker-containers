@@ -8,21 +8,21 @@ ARG BLASTPLUS_VER
 ARG PYTHON_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL dockerfile.version="1.0.0"
-LABEL software="BLAST+"
-LABEL software.version=${BLASTPLUS_VER}
 LABEL description="BLAST+: A suite of command-line tools to run BLAST (Basic Local Alignment Search Tool)."
-LABEL website="https://www.ncbi.nlm.nih.gov/books/NBK279690/"
+LABEL dockerfile.version="1.0.0"
 LABEL license.url="https://www.ncbi.nlm.nih.gov/IEB/ToolBox/CPP_DOC/lxr/source/scripts/projects/blast/LICENSE"
+LABEL software.version=${BLASTPLUS_VER}
+LABEL software="BLAST+"
+LABEL website="https://www.ncbi.nlm.nih.gov/books/NBK279690/"
 LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
+    libncursesw5-dev \
     build-essential \
     ca-certificates \
-    libncursesw5-dev \
     libreadline-dev \
     libsqlite3-dev \
     libjson-perl \
@@ -43,17 +43,18 @@ RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/
     && mv ncbi-blast-${BLASTPLUS_VER}+/bin/* /usr/local/bin/
 
 # Install Python3
-RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
-    tar -zxvf Python-${PYTHON_VER}.tgz && \
-    rm Python-${PYTHON_VER}.tgz && \
-    cd Python-${PYTHON_VER} && \
-    ./configure && \
-    make && make install
+RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz \
+    && tar -zxvf Python-${PYTHON_VER}.tgz \
+    && rm Python-${PYTHON_VER}.tgz \
+    && cd Python-${PYTHON_VER} \
+    && ./configure \
+    && make \
+    && make install
     
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/ /usr/
+COPY --from=builder /usr/local/ /usr/local/
 
 # Copy certificates for wget
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
@@ -61,7 +62,7 @@ COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 RUN mkdir /data/
 WORKDIR /data
 
-# Verify tools are working properly
+# Run tests
 FROM app as test
 
 RUN apt-get update

@@ -18,37 +18,39 @@ ARG ODSWRITER_VER
 ARG XLWT_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL dockerfile.version="2.0.1"
-LABEL software="pandas"
-LABEL software.version=${PANDAS_VER}
 LABEL description="pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language."
-LABEL website="https://pandas.pydata.org/"
+LABEL dockerfile.version="2.0.1"
 LABEL license.url="https://github.com/pandas-dev/pandas/blob/main/LICENSE"
+LABEL software.version=${PANDAS_VER}
+LABEL software="pandas"
+LABEL website="https://pandas.pydata.org/"
 LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
-    build-essential \
     libncursesw5-dev \
+    build-essential \
     libreadline-dev \
     libsqlite3-dev \
     libgdbm-dev \
     libssl-dev \
     libbz2-dev \
-    zlib1g-dev\
     libffi-dev \
+    zlib1g-dev\
     tk-dev \
     curl \
     wget
 
 # Install Python 3
-RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz && \
-    tar -zxvf Python-${PYTHON_VER}.tgz && \
-    cd Python-${PYTHON_VER} && \
-    ./configure && \
-    make && make install
+RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz \
+    && tar -zxf Python-${PYTHON_VER}.tgz \
+    && rm Python-${PYTHON_VER}.tgz \
+    && cd Python-${PYTHON_VER} \
+    && ./configure \
+    && make \
+    && make install
 
 RUN pip3 install \
     pandas==${PANDAS_VER} \
@@ -62,11 +64,12 @@ RUN pip3 install \
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/ /usr/
+COPY --from=builder /usr/local/ /usr/local/
 
 RUN mkdir data/
 WORKDIR /data
 
+# Run tests
 FROM builder as test
 
 RUN apt-get update

@@ -23,7 +23,7 @@ wget -nv https://raw.githubusercontent.com/biopython/biopython/master/Doc/exampl
 
 Analyze test data with Biopython:
 
-```
+```bash
 python
 
 >>> from Bio import SeqIO

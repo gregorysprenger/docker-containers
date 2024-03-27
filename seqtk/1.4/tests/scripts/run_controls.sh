@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Download test data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
+wget https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
 
 # Positive Control
 seqtk fqchk \

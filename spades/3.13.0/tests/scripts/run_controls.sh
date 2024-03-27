@@ -8,10 +8,8 @@ cd data
 spades.py --test | grep "TEST PASSED CORRECTLY" > spades_test_output.txt
 
 # Download test data
-wget -nv --no-check-certificate \
-  https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R1.fastq.gz
-  
-wget -nv --no-check-certificate \
+wget \
+  https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R1.fastq.gz \
   https://github.com/nf-core/test-datasets/raw/viralrecon/illumina/sispa/SRR11140744_R2.fastq.gz
 
 # Run positive control

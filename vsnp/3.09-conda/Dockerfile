@@ -8,25 +8,27 @@ ARG VSNP_VER
 ARG PYTHON_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL software="vSNP3"
-LABEL software.version=${VSNP_VER}
 LABEL description="Generate annotated SNP tables and phylogenetic trees."
-LABEL website="https://github.com/USDA-VS/vsnp3"
 LABEL license.url="https://github.com/USDA-VS/vsnp3/blob/main/LICENSE"
+LABEL software.version=${VSNP_VER}
+LABEL software="vSNP3"
+LABEL website="https://github.com/USDA-VS/vsnp3"
 LABEL maintainer="Gregory Sprenger"
 
 ENV DEBIAN_FRONTEND=noninteractive 
 
 # Update and install packages
-RUN apt-get update -y && apt-get install -y \
-    wget \
-    libattr1-dev
+RUN apt-get update -y \
+    && DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+    libattr1-dev \
+    wget
 
 # Install miniconda
-RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /usr/local/miniconda3 \
     && rm -f Miniconda3-latest-Linux-x86_64.sh
+
 ENV PATH="/usr/local/miniconda3/bin:${PATH}"
 
 # Install bioconda
@@ -38,15 +40,11 @@ RUN conda config --add channels defaults \
 RUN conda create -n vsnp vsnp3=$VSNP_VER
 ENV PATH="/usr/local/miniconda3/envs/vsnp/bin:${PATH}"
 
+# Run Dockerfile
 FROM ubuntu:focal as app
 ARG VSNP_VER
 
-ENV DEBIAN_FRONTEND=noninteractive 
-
-# Copy packages from builder to production image
-COPY --from=builder /usr/local/miniconda3 /usr/local/miniconda3
 COPY --from=builder /usr/local/ /usr/local/
-COPY --from=builder /usr/ /usr/
 
 # Copy path environments from builder to production image
 ENV PATH="/usr/local/miniconda3/bin:${PATH}"
@@ -55,6 +53,7 @@ ENV PATH="/usr/local/miniconda3/envs/vsnp/bin:${PATH}"
 RUN mkdir data/
 WORKDIR /data
 
+# Run tests
 FROM app as test
 
 # Use git for test data

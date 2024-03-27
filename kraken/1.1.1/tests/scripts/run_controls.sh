@@ -2,19 +2,20 @@
 
 # Download test data
 wget \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
-wget \
+  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz \
   https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 
 # Download and extract MiniKraken database
 wget http://ccb.jhu.edu/software/kraken/dl/minikraken_20171019_4GB.tgz
+
 mkdir /kraken-database
-tar -xzvf minikraken_20171019_4GB.tgz \
+tar -xzf minikraken_20171019_4GB.tgz \
   -C /kraken-database \
   --strip-components 1
+
 rm minikraken_20171019_4GB.tgz
 
-# Make sure database exists
+# Check for database.{idx,kdb} files
 for ext in idx kdb; do
   if [ ! -f /kraken-database/database.${ext} ]; then
     echo "ERROR: Pre-formatted kraken database file `database.${ext}` for read classification is missing" >&2
@@ -22,6 +23,7 @@ for ext in idx kdb; do
   fi
 done
 
+# Check for {names,nodes}.dmp files
 for file in names nodes; do
   if [ ! -f /kraken-database/taxonomy/${file}.dmp ]; then
     echo "ERROR: Pre-formatted taxonomy information file `taxonomy/$file.dmp` is missing" >&2

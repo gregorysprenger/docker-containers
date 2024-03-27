@@ -6,19 +6,17 @@ cd data
 
 # Download test data
 wget \
-  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz
-  
-wget \
+  https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R1.fastq.gz \
   https://github.com/nf-core/test-datasets/raw/mag/test_data/test_minigut_R2.fastq.gz
 
 # Download and extract Kraken2 database
 wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_20230605.tar.gz
+
 mkdir /kraken2-database
-tar -xzvf k2_standard_08gb_20230605.tar.gz \
-  -C /kraken2-database
+tar -xzf k2_standard_08gb_20230605.tar.gz -C /kraken2-database
 rm k2_standard_08gb_20230605.tar.gz
 
-# Make sure database exists
+# Check for {hash,opts,taxo}.k2d files
 for prefix in hash opts taxo; do
   if [ ! -f /kraken2-database/${prefix}.k2d ]; then
     echo "ERROR: pre-formatted kraken2 database (${prefix}.k2d) for read classification is missing" >&2
@@ -37,7 +35,8 @@ kraken2 \
   --output /dev/null \
   --use-names \
   --report kraken2.tab \
-  test_minigut_R1.fastq.gz test_minigut_R2.fastq.gz
+  test_minigut_R1.fastq.gz \
+  test_minigut_R2.fastq.gz
 
 # Get checksum
 sha256sum kraken2.tab > kraken2.tab.checksum
@@ -49,7 +48,8 @@ kraken2 \
   --output /dev/null \
   --use-names \
   --report kraken_no_database.tab \
-  test_minigut_R1.fastq.gz test_minigut_R2.fastq.gz \
+  test_minigut_R1.fastq.gz \
+  test_minigut_R2.fastq.gz \
   2> missing_database.txt
 
 # Delete Kraken2 database to save space

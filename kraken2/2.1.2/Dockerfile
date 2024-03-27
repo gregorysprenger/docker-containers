@@ -8,55 +8,53 @@ ARG KRAKEN2_VER
 ARG MINIKRAKEN2_VER
 
 LABEL base.image="ubuntu:focal"
-LABEL dockerfile.version="1.0.0"
-LABEL software="Kraken 2"
-LABEL software.version=${KRAKEN2_VER}
 LABEL description="Taxonomic sequence classifier"
-LABEL website="https://github.com/DerrickWood/kraken2"
+LABEL dockerfile.version="1.0.0"
 LABEL license="https://github.com/DerrickWood/kraken2/blob/master/LICENSE"
+LABEL software.version=${KRAKEN2_VER}
+LABEL software="Kraken 2"
+LABEL website="https://github.com/DerrickWood/kraken2"
 LABEL maintainer="Gregory Sprenger"
 
 # Install dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
     ca-certificates \
     build-essential \
     zlib1g-dev \
+    rsync \
     wget \
     curl \
-    rsync \
     pigz
 
 # Install Kraken2
-RUN wget https://github.com/DerrickWood/kraken2/archive/refs/tags/v${KRAKEN2_VER}.tar.gz && \
-    tar -zxvf v${KRAKEN2_VER}.tar.gz && \
-    rm -rf v${KRAKEN2_VER}.tar.gz && \
-    cd kraken2-${KRAKEN2_VER} && \
-    ./install_kraken2.sh /usr/
+RUN wget https://github.com/DerrickWood/kraken2/archive/refs/tags/v${KRAKEN2_VER}.tar.gz \
+    && tar -zxf v${KRAKEN2_VER}.tar.gz \
+    && rm v${KRAKEN2_VER}.tar.gz \
+    && cd kraken2-${KRAKEN2_VER} \
+    && ./install_kraken2.sh /usr/local/bin/
 
 # Download Kraken2 MiniKraken
-RUN wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_${MINIKRAKEN2_VER}.tar.gz && \
-    mkdir /kraken2-database && \
-    tar -xzvf k2_standard_08gb_${MINIKRAKEN2_VER}.tar.gz \
-    -C /kraken2-database && \
-    rm -rf k2_standard_08gb_${MINIKRAKEN2_VER}
+RUN wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08gb_${MINIKRAKEN2_VER}.tar.gz \
+    && mkdir /kraken2-database \
+    && tar -xzf k2_standard_08gb_${MINIKRAKEN2_VER}.tar.gz \
+      -C /kraken2-database \
+    && rm k2_standard_08gb_${MINIKRAKEN2_VER}
 
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/ /usr/
+COPY --from=builder /usr/local/ /usr/local/
 COPY --from=builder /kraken2-database/ /kraken2-database/
-
-ENV PATH="${PATH}:/usr/:/usr/kraken2"
 
 RUN mkdir data/
 WORKDIR /data
 
-# Make sure Kraken 2 is working properly
+# Run tests
 FROM app as test
 
-RUN apt-get update && apt-get install -y wget python3
+RUN apt-get update && apt-get install -y python3 wget
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
