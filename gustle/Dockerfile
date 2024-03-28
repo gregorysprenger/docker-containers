@@ -67,7 +67,8 @@ FROM ubuntu:focal as app
 
 ARG GUSTLE_VER
 
-COPY --from=builder /usr/local/ /usr/local/
+COPY --from=builder /usr/ /usr/
+COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir data/
 WORKDIR data
