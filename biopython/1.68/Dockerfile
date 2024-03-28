@@ -18,6 +18,8 @@ LABEL software="Biopython"
 LABEL website="https://biopython.org/"
 LABEL maintainer="Gregory Sprenger"
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Install dependencies
 RUN apt-get update \
    && DEBIAN_FRONTEND=noninteractive \
@@ -58,15 +60,13 @@ RUN BIOPYTHON_SHORT_VER="$(echo ${BIOPYTHON_VER} | sed 's/\.//g')" \
     && rm biopython-${BIOPYTHON_SHORT_VER}.tar.gz \
     && cd biopython-biopython-${BIOPYTHON_SHORT_VER} \
     && pip install --no-cache-dir -e . \
-    && python setup.py test \
     && python setup.py install
 
 # Run Dockerfile
 FROM ubuntu:focal as app
 
 COPY --from=builder /usr/local/ /usr/local/
-
-RUN update-ca-certificates
+COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir data/
 WORKDIR /data
@@ -74,11 +74,6 @@ WORKDIR /data
 # Run tests
 FROM app as test
 
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-    python3 \
-    && rm -rf /var/lib/apt/lists/*
-
 RUN mkdir ../tests/
 COPY tests/ ../tests/
-RUN python3 -m unittest discover -v -s ../tests
+RUN python -m unittest discover -v -s ../tests
