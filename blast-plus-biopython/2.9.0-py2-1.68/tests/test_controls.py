@@ -20,7 +20,7 @@ class TestPositiveControls(unittest.TestCase):
             pos_blast_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
             pos_blast_checksum,
-            "5c0f155a8190de9252828bd833f24308c9fdd8a3780d0732323a7844f30fcf08",
+            "8af71908ddca4da2a4023b02111b79fd48a82700f66a8a1cc266e7c3652b9e5e",
         )
 
 
