@@ -59,7 +59,8 @@ RUN wget -q "https://github.com/refresh-bio/KMC/archive/refs/tags/v${KMC_VER}.ta
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/local/ /usr/local/
+COPY --from=builder /usr/ /usr/
+COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir data/
 WORKDIR /data
