@@ -16,6 +16,8 @@ LABEL software="gustle"
 LABEL website="https://github.com/supernifty/gustle"
 LABEL maintainer="Gregory Sprenger"
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Install dependencies
 RUN apt-get update -y \
     && DEBIAN_FRONTEND noninteractive \
