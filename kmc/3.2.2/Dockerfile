@@ -1,6 +1,6 @@
 # Set global variables
 ARG KMC_VER="3.2.2"
-ARG ZLIB_VER="1.3"
+ARG ZLIB_VER="1.3.1"
 ARG PYTHON_VER="3.9.6"
 
 # Build Dockerfile
@@ -50,7 +50,7 @@ RUN wget -q "https://github.com/refresh-bio/KMC/archive/refs/tags/v${KMC_VER}.ta
     && cd "KMC-${KMC_VER}/3rd_party/cloudflare" \
     && wget -q "https://zlib.net/zlib-${ZLIB_VER}.tar.gz" \
     && tar -xzf "zlib-${ZLIB_VER}.tar.gz" --strip-components=1 \
-    && rm "zlib-${ZLIB_VER}.tar.gz "\
+    && rm "zlib-${ZLIB_VER}.tar.gz" \
     && cd "/KMC-${KMC_VER}" \
     && make -j "$(nproc)" \
     && cp bin/kmc /usr/local/bin \
@@ -68,11 +68,6 @@ WORKDIR /data
 
 # Run tests
 FROM builder as test
-
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-    python3 \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
