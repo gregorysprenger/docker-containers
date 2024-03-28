@@ -34,7 +34,7 @@ RUN apt-get update \
     curl
 
 # Install Python 3
-RUN wget "https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz" \
+RUN wget -q "https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz" \
     && tar -zxf "Python-${PYTHON_VER}.tgz" \
     && rm "Python-${PYTHON_VER}.tgz" \
     && cd "Python-${PYTHON_VER}" \
@@ -43,11 +43,11 @@ RUN wget "https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.t
     && make install
 
 # Install KMC
-RUN wget "https://github.com/refresh-bio/KMC/archive/refs/tags/v${KMC_VER}.tar.gz" \
+RUN wget -q "https://github.com/refresh-bio/KMC/archive/refs/tags/v${KMC_VER}.tar.gz" \
     && tar -xzf "v${KMC_VER}.tar.gz" \
     && rm "v${KMC_VER}.tar.gz" \
     && cd "KMC-${KMC_VER}/3rd_party/cloudflare" \
-    && wget "https://zlib.net/zlib-${ZLIB_VER}.tar.gz" \
+    && wget -q "https://zlib.net/zlib-${ZLIB_VER}.tar.gz" \
     && tar -xzf "zlib-${ZLIB_VER}.tar.gz" --strip-components=1 \
     && rm "zlib-${ZLIB_VER}.tar.gz "\
     && cd "/KMC-${KMC_VER}" \
