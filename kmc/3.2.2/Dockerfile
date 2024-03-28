@@ -21,8 +21,9 @@ LABEL maintainer="Gregory Sprenger"
 # Install dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     build-essential \
+    ca-certificates \
     libncurses5-dev \
     libreadline-dev \
     libgdbm-dev \
@@ -31,7 +32,7 @@ RUN apt-get update \
     libssl-dev \
     libffi-dev \
     wget \
-    curl
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python 3
 RUN wget -q "https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz" \
@@ -68,7 +69,10 @@ WORKDIR /data
 # Run tests
 FROM builder as test
 
-RUN apt-get update && apt-get install -y python3
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/
