@@ -11,7 +11,7 @@ LABEL base.image="ubuntu:focal"
 LABEL description="Performs genome wide MLST gentoyping."
 LABEL docker.version="1.0.0"
 LABEL license.url="https://github.com/supernifty/gustle/blob/master/LICENSE"
-LABEL software.version=${GUSTLE_VER}
+LABEL software.version="${GUSTLE_VER}"
 LABEL software="gustle"
 LABEL website="https://github.com/supernifty/gustle"
 LABEL maintainer="Gregory Sprenger"
@@ -40,13 +40,13 @@ RUN apt-get update -y \
 
 # Install Golang
 ENV GOLANG_VERSION "${GO_VERSION}"
-ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_URL "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz"
 ENV GOLANG_SHA256_CHECKSUM 956f8507b302ab0bb747613695cdae10af99bbd39a90cae522b7c0302cc27245
-ENV GOPATH $HOME/go
-ENV PATH $PATH:/usr/local/go/bin:$GOPATH/bin
+ENV GOPATH "${HOME}/go"
+ENV PATH "${PATH}:/usr/local/go/bin:${GOPATH}/bin"
 
 RUN curl -fsSL "${GOLANG_DOWNLOAD_URL}" -o golang.tar.gz \
-    && echo "$GOLANG_SHA256_CHECKSUM golang.tar.gz" | sha256sum -c - \
+    && echo "${GOLANG_SHA256_CHECKSUM} golang.tar.gz" | sha256sum -c - \
     && tar -C /usr/local/ -xzf golang.tar.gz \
     && rm golang.tar.gz \
     && mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
@@ -60,7 +60,7 @@ RUN wget "https://github.com/chrisgulvik/gustle/archive/refs/tags/v${GUSTLE_VER}
     && cd "gustle-${GUSTLE_VER}" \
     && go build main/gustle.go 
 
-ENV PATH="/gustle-${GUSTLE_VER}:$PATH"
+ENV PATH="/gustle-${GUSTLE_VER}:${PATH}"
 
 # Run Dockerfile
 FROM ubuntu:focal as app
@@ -71,7 +71,7 @@ COPY --from=builder /usr/ /usr/
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir data/
-WORKDIR data
+WORKDIR /data
 
 # Run tests
 FROM app as test
