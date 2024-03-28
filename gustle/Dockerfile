@@ -21,7 +21,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # Install dependencies
 RUN apt-get update -y \
     && DEBIAN_FRONTEND noninteractive \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     ca-certificates \
     build-essential \
     build-essential \
@@ -35,7 +35,8 @@ RUN apt-get update -y \
     uuid-dev \
     python3 \
     curl \
-    wget
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Golang
 ENV GOLANG_VERSION ${GO_VERSION}
@@ -75,11 +76,10 @@ WORKDIR data
 FROM app as test
 
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install --no-install-recommends -y \
     python3 \
-    python3-pip \
     wget \
-    curl
+    && rm -rf /var/lib/apt/lists/*
 
 RUN pip install pytest
 
