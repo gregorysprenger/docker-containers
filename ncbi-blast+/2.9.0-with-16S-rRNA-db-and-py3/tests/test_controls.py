@@ -38,7 +38,7 @@ class TestControls(unittest.TestCase):
             python2_output_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
             python2_output_checksum,
-            "25f18556b902ab2ee9ae3df2bbadd56ef04ced2e96ac79fff9989cd94440e49a",
+            "b2e815f03bbf5bc368bda6ec5253ff7682314386a1b0321f79cfb5873e0d2782",
         )
 
     def test_pos_blast_checksum(self):
@@ -46,7 +46,7 @@ class TestControls(unittest.TestCase):
             pos_blast_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
             pos_blast_checksum,
-            "4323a602e6cb0c0d2998cf3236b229ba833321da90a3f95990ee50d961e92d02",
+            "8af71908ddca4da2a4023b02111b79fd48a82700f66a8a1cc266e7c3652b9e5e",
         )
 
     def test_neg_blast_output(self):

@@ -11,50 +11,52 @@ LABEL base.image="ubuntu:focal"
 LABEL description="Strategic Kmer Extension for Scrupulous Assemblies"
 LABEL dockerfile.version="1.0.0"
 LABEL lisence="https://github.com/ncbi/SKESA/blob/master/LICENSE"
-LABEL software.version=${SKESA_VER}
+LABEL software.version="${SKESA_VER}"
 LABEL software="SKESA"
 LABEL website="https://github.com/ncbi/SKESA"
 LABEL maintainer="Gregory Sprenger"
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Install dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     build-essential \
+    ca-certificates \
     autotools-dev \
     python3-dev \
     libbz2-dev \
     libicu-dev \
     cmake \
     wget \
-    curl \
     pigz \
-    git
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install BOOST
-RUN BOOST_REFORMAT_VER=$(echo ${BOOST_VER} | sed 's/\./_/g') \
-    && wget https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VER}/source/boost_${BOOST_REFORMAT_VER}.tar.gz \
-    && tar -xzf boost_${BOOST_REFORMAT_VER}.tar.gz \
-    && rm boost_${BOOST_REFORMAT_VER}.tar.gz \
-    && mv boost_${BOOST_REFORMAT_VER} boost_${BOOST_VER} \
-    && cd boost_${BOOST_VER} \
-    && ./bootstrap.sh --prefix=/usr/local/bin/ \
-    && ./b2 -j$(nproc) threading=multi \
-    && ./b2 install -j$(nproc) threading=multi
+RUN BOOST_REFORMAT_VER="${BOOST_VER//\./_}" \
+    && wget -q "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VER}/source/boost_${BOOST_REFORMAT_VER}.tar.gz" \
+    && tar -xzf "boost_${BOOST_REFORMAT_VER}.tar.gz" \
+    && rm "boost_${BOOST_REFORMAT_VER}.tar.gz" \
+    && cd "boost_${BOOST_REFORMAT_VER}" \
+    && ./bootstrap.sh --prefix=/usr/ \
+    && ./b2 -j "$(nproc)" threading=multi \
+    && ./b2 install -j "$(nproc)" threading=multi
 
 # Install SKESA
-RUN wget https://github.com/ncbi/SKESA/archive/refs/tags/${SKESA_VER}.tar.gz \
-    && tar -xzf ${SKESA_VER}.tar.gz \
-    && rm ${SKESA_VER}.tar.gz \
-    && cd SKESA-${SKESA_VER} \
-    && make -f Makefile.nongs
+RUN wget -q "https://github.com/ncbi/SKESA/archive/refs/tags/${SKESA_VER}.tar.gz" \
+    && tar -xzf "${SKESA_VER}.tar.gz" \
+    && rm "${SKESA_VER}.tar.gz" \
+    && cd "SKESA-${SKESA_VER}" \
+    && make -f Makefile.nongs \
+    && mv skesa /usr/local/bin
 
 # Run Dockerfile
 FROM ubuntu:focal as app
-ARG SKESA_VER
-ARG BOOST_VER
 
-COPY --from=builder /usr/local/ /usr/local/
+COPY --from=builder /usr/ /usr/
+COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir data/
 WORKDIR /data
@@ -62,7 +64,10 @@ WORKDIR /data
 # Run tests
 FROM app as test
 
-RUN apt-get update && apt-get install -y wget python3
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/

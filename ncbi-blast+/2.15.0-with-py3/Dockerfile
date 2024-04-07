@@ -11,7 +11,7 @@ LABEL base.image="ubuntu:focal"
 LABEL description="BLAST+: A suite of command-line tools to run BLAST (Basic Local Alignment Search Tool)."
 LABEL dockerfile.version="1.0.0"
 LABEL license.url="https://www.ncbi.nlm.nih.gov/IEB/ToolBox/CPP_DOC/lxr/source/scripts/projects/blast/LICENSE"
-LABEL software.version=${BLASTPLUS_VER}
+LABEL software.version="${BLASTPLUS_VER}"
 LABEL software="BLAST+"
 LABEL website="https://www.ncbi.nlm.nih.gov/books/NBK279690/"
 LABEL maintainer="Gregory Sprenger"
@@ -19,7 +19,7 @@ LABEL maintainer="Gregory Sprenger"
 # Install dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
     libncursesw5-dev \
     build-essential \
     ca-certificates \
@@ -31,22 +31,22 @@ RUN apt-get update \
     libbz2-dev \
     libc6-dev \
     tk-dev \
-    curl \
     perl \
     wget \
-    pigz
+    pigz \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install BLAST+
-RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz \
-    && tar xvf ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz \
-    && rm ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz \
-    && mv ncbi-blast-${BLASTPLUS_VER}+/bin/* /usr/local/bin/
+RUN wget -q "https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLASTPLUS_VER}/ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz" \
+    && tar -xzf "ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz" \
+    && rm "ncbi-blast-${BLASTPLUS_VER}+-x64-linux.tar.gz" \
+    && mv "ncbi-blast-${BLASTPLUS_VER}+"/bin/* /usr/local/bin/
 
 # Install Python3
-RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz \
-    && tar -zxvf Python-${PYTHON_VER}.tgz \
-    && rm Python-${PYTHON_VER}.tgz \
-    && cd Python-${PYTHON_VER} \
+RUN wget -q "https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz" \
+    && tar -xzf "Python-${PYTHON_VER}.tgz" \
+    && rm "Python-${PYTHON_VER}.tgz" \
+    && cd "Python-${PYTHON_VER}" \
     && ./configure \
     && make \
     && make install
@@ -54,9 +54,7 @@ RUN wget https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tg
 # Run Dockerfile
 FROM ubuntu:focal as app
 
-COPY --from=builder /usr/local/ /usr/local/
-
-# Copy certificates for wget
+COPY --from=builder /usr/ /usr/
 COPY --from=builder /etc/ssl/certs/ /etc/ssl/certs/
 
 RUN mkdir /data/
@@ -64,8 +62,6 @@ WORKDIR /data
 
 # Run tests
 FROM app as test
-
-RUN apt-get update
 
 RUN mkdir ../tests/
 COPY tests/ ../tests/

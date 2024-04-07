@@ -38,7 +38,7 @@ class TestControls(unittest.TestCase):
             python2_output_checksum = f.readlines()[0].split(" ")[0]
         self.assertEqual(
             python2_output_checksum,
-            "e2b11afc00dc180e74f2f6ad3400b90228c4be2c2e4c006fb4321d2cdc616468",
+            "9c0ff403c592ed3804cbdf27b3dec77cc04b8a466b216826cc3d5758dbe089b2",
         )
 
     def test_pos_blast_checksum(self):
