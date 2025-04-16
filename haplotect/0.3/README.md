@@ -1,0 +1,1 @@
+This Dockerfile is adds a Ubuntu base image to [abelhj/haplotect](https://hub.docker.com/r/abelhj/haplotect) so that the `ps` command can be used to list the processes running in the container for Nextflow.
